@@ -23,9 +23,14 @@
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>
-        <env name="DB_CONNECTION" value="sqlite"/>
-        <env name="DB_DATABASE" value=":memory:"/>
-        <env name="DB_URL" value=""/>
+        <env name="DB_CONNECTION" value="mariadb" force="true"/>
+        <env name="DB_HOST" value="127.0.0.1" force="true"/>
+        <env name="DB_PORT" value="3306" force="true"/>
+        <env name="DB_DATABASE" value="trendandattire_test" force="true"/>
+        <env name="DB_USERNAME" value="ta_app" force="true"/>
+        <env name="DB_PASSWORD" value="local_dev_only" force="true"/>
+        <env name="DB_URL" value="" force="true"/>
+        <env name="APP_KEY" value="base64:sBH/zzZdjtZJCB4/8iHSZAw+Z4U/ZzIclONlf5vv0qM=" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>

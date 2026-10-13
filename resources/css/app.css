@@ -1,9 +1,151 @@
-@import 'tailwindcss';
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import "@fontsource/source-sans-3/400.css";
+@import "@fontsource/source-sans-3/600.css";
+@import "@fontsource/libre-baskerville/400.css";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+:root {
+    --ta-navy: #0b1f3a;
+    --ta-teal: #0e7c7b;
+    --ta-sand: #f7f5f2;
+    --ta-ink: #1c2430;
+    --ta-line: #e6e1d8;
+    --ta-focus: #0e7c7b;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+body {
+    background: var(--ta-sand);
+    color: var(--ta-ink);
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+}
+
+h1, h2, h3, .display-font {
+    font-family: "Libre Baskerville", Georgia, serif;
+    color: var(--ta-navy);
+}
+
+a {
+    color: var(--ta-teal);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.btn:focus-visible {
+    outline: 3px solid var(--ta-focus);
+    outline-offset: 2px;
+}
+
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    background: white;
+    padding: 0.5rem 1rem;
+    z-index: 1080;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}
+
+.site-header {
+    background: white;
+    border-bottom: 1px solid var(--ta-line);
+}
+
+.brand-mark {
+    color: var(--ta-navy);
+    font-family: "Libre Baskerville", Georgia, serif;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+}
+
+.nav-link {
+    color: var(--ta-navy);
+}
+
+.btn-navy {
+    background: var(--ta-navy);
+    border-color: var(--ta-navy);
+    color: white;
+}
+
+.btn-navy:hover,
+.btn-navy:focus {
+    background: #16345c;
+    color: white;
+}
+
+.btn-teal {
+    background: var(--ta-teal);
+    border-color: var(--ta-teal);
+    color: white;
+}
+
+.btn-teal:hover,
+.btn-teal:focus {
+    background: #0b6564;
+    color: white;
+}
+
+.product-card {
+    background: white;
+    border: 1px solid var(--ta-line);
+    height: 100%;
+}
+
+.product-card img,
+.placeholder-art {
+    background: #eef3f3;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    width: 100%;
+}
+
+.hero {
+    background: linear-gradient(120deg, #ffffff 0%, #e7f3f2 55%, #f7f5f2 100%);
+    border: 1px solid var(--ta-line);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    background: #e7eef5;
+    color: var(--ta-navy);
+    font-size: 0.85rem;
+}
+
+.admin-shell {
+    min-height: 100vh;
+}
+
+.admin-nav {
+    background: var(--ta-navy);
+    color: white;
+}
+
+.admin-nav a {
+    color: #d5e4e3;
+    text-decoration: none;
+    display: block;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.4rem;
+}
+
+.admin-nav a:hover,
+.admin-nav a:focus,
+.admin-nav a.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.site-footer {
+    background: white;
+    border-top: 1px solid var(--ta-line);
 }

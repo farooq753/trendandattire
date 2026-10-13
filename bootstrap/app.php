@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Middleware\EnsurePermission;
+use App\Http\Middleware\EnsureStaff;
+use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\SetStorefrontContext;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,7 +16,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->append(SecurityHeaders::class);
+        $middleware->web(append: [
+            SetStorefrontContext::class,
+        ]);
+        $middleware->alias([
+            'permission' => EnsurePermission::class,
+            'staff' => EnsureStaff::class,
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/stripe',
+            'webhooks/paypal',
+        ]);
+        $middleware->redirectGuestsTo(fn () => route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

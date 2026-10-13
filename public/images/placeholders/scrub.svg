@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" role="img" aria-labelledby="title desc">
+  <title id="title">Scrub suit placeholder</title>
+  <desc id="desc">Local development illustration of a scrub top and pants.</desc>
+  <rect width="640" height="800" fill="#F7F5F2"/>
+  <rect x="40" y="40" width="560" height="720" rx="24" fill="#ffffff" stroke="#0B1F3A" stroke-width="2"/>
+  <path d="M220 150h200l40 70v280H180V220z" fill="#0E7C7B"/>
+  <path d="M250 150c10 36 40 56 70 56s60-20 70-56" fill="#F7F5F2"/>
+  <path d="M210 470h90l-10 210h-70zM340 470h90l-10 210h-70z" fill="#0B1F3A"/>
+  <text x="320" y="740" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#1C2430">Trend &amp; Attire</text>
+</svg>
