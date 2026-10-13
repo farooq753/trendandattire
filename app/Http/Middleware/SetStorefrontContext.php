@@ -2,9 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Category;
+use App\Models\Country;
+use App\Models\Currency;
+use App\Services\CartService;
 use App\Services\CurrencyService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -40,6 +45,16 @@ class SetStorefrontContext
 
             $request->session()->put('guest_cart', $token);
         }
+
+        $cart = app(CartService::class)->current($user, $request->session()->get('guest_cart'));
+
+        View::share([
+            'navCategories' => Category::query()->active()->orderBy('sort_order')->orderBy('name')->get(),
+            'storeCurrencies' => Currency::query()->where('is_active', true)->orderBy('code')->get(),
+            'storeCountries' => Country::query()->where('is_active', true)->orderBy('name')->get(),
+            'cartCount' => (int) $cart->items()->sum('quantity'),
+            'activeCurrency' => $request->session()->get('currency_code'),
+        ]);
 
         return $next($request);
     }

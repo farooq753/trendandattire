@@ -2,16 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\Category;
-use App\Models\Country;
-use App\Models\Currency;
-use App\Services\CartService;
-use App\Services\CurrencyService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -44,17 +38,6 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('tracking', function (Request $request) {
             return Limit::perMinute(10)->by($request->ip());
-        });
-
-        View::composer('layouts.store', function ($view) {
-            $cart = app(CartService::class)->current(auth()->user(), session('guest_cart'));
-            $view->with([
-                'navCategories' => Category::query()->active()->orderBy('sort_order')->orderBy('name')->get(),
-                'storeCurrencies' => Currency::query()->where('is_active', true)->orderBy('code')->get(),
-                'storeCountries' => Country::query()->where('is_active', true)->orderBy('name')->get(),
-                'cartCount' => (int) $cart->items()->sum('quantity'),
-                'activeCurrency' => session('currency_code', app(CurrencyService::class)->defaultCode()),
-            ]);
         });
     }
 }

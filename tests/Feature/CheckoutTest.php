@@ -16,6 +16,7 @@ class CheckoutTest extends TestCase
     public function test_checkout_validation_cod_tax_shipping_and_duplicate_submission(): void
     {
         $method = StoreFixture::basics();
+        $this->get(route('checkout.show'))->assertOk();
         $product = StoreFixture::readyProduct(3, '50.0000');
         $variant = $product->variants->first();
         $token = Str::random(40);
