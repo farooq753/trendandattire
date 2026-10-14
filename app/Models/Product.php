@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Money;
+use App\Support\PublicPath;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -118,6 +119,6 @@ class Product extends Model
     {
         $image = $this->images->firstWhere('is_primary', true) ?? $this->images->first();
 
-        return $image?->path ?? '/images/placeholders/scrub.svg';
+        return PublicPath::url($image?->path);
     }
 }

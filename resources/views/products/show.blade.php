@@ -8,7 +8,7 @@
         <img class="img-fluid placeholder-art" src="{{ $product->primaryImagePath() }}" alt="{{ $product->images->first()->alt ?? $product->name }}">
         <div class="d-flex gap-2 mt-2">
             @foreach ($product->images as $image)
-                <img src="{{ $image->path }}" alt="{{ $image->alt }}" width="72" height="90">
+                <img src="{{ $image->url() }}" alt="{{ $image->alt }}" width="72" height="90">
             @endforeach
         </div>
     </div>

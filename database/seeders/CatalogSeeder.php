@@ -94,7 +94,7 @@ class CatalogSeeder extends Seeder
         );
 
         ProductImage::query()->updateOrCreate(
-            ['product_id' => $set->id, 'path' => '/images/placeholders/scrub.svg'],
+            ['product_id' => $set->id, 'path' => 'images/placeholders/scrub.svg'],
             ['alt' => 'Illustration of a scrub set', 'is_primary' => true, 'sort_order' => 1],
         );
 
@@ -133,7 +133,7 @@ class CatalogSeeder extends Seeder
         );
 
         ProductImage::query()->updateOrCreate(
-            ['product_id' => $custom->id, 'path' => '/images/placeholders/scrub.svg'],
+            ['product_id' => $custom->id, 'path' => 'images/placeholders/scrub.svg'],
             ['alt' => 'Illustration of a custom scrub top', 'is_primary' => true, 'sort_order' => 1],
         );
 
@@ -206,7 +206,7 @@ class CatalogSeeder extends Seeder
         );
 
         ProductImage::query()->updateOrCreate(
-            ['product_id' => $product->id, 'path' => '/images/placeholders/scrub.svg'],
+            ['product_id' => $product->id, 'path' => 'images/placeholders/scrub.svg'],
             ['alt' => $name, 'is_primary' => true, 'sort_order' => 1],
         );
 

@@ -11,7 +11,7 @@
             <a class="btn btn-teal" href="{{ route('custom.index') }}">Design custom scrubs</a>
         </div>
         <div class="col-lg-5">
-            <img class="img-fluid placeholder-art" src="/images/placeholders/scrub.svg" alt="Illustration of a scrub suit">
+            <img class="img-fluid placeholder-art" src="{{ asset('images/placeholders/scrub.svg') }}" alt="Illustration of a scrub suit">
         </div>
     </div>
 </section>

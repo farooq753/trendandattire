@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicPath;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,5 +18,10 @@ class ProductImage extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function url(): string
+    {
+        return PublicPath::url($this->path);
     }
 }

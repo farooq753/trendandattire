@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Product;
 use Database\Seeders\CatalogSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\URL;
 use Tests\Support\StoreFixture;
 use Tests\TestCase;
 
@@ -17,6 +18,22 @@ class CatalogTest extends TestCase
         parent::setUp();
         StoreFixture::basics();
         $this->seed(CatalogSeeder::class);
+    }
+
+    public function test_images_keep_the_subdirectory_from_the_application_url(): void
+    {
+        URL::useAssetOrigin('https://quicksoftsolution.com/public');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('https://quicksoftsolution.com/public/images/placeholders/scrub.svg', false)
+            ->assertDontSee('src="/images/placeholders/scrub.svg"', false);
+
+        $product = Product::query()->where('slug', 'core-scrub-set')->firstOrFail();
+
+        $this->get('/products/'.$product->slug)
+            ->assertOk()
+            ->assertSee('https://quicksoftsolution.com/public/images/placeholders/scrub.svg', false);
     }
 
     public function test_storefront_pages_render(): void
