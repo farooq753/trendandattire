@@ -36,6 +36,21 @@ class CatalogTest extends TestCase
             ->assertSee('https://quicksoftsolution.com/public/images/placeholders/scrub.svg', false);
     }
 
+    public function test_images_include_the_xampp_project_folder(): void
+    {
+        URL::useAssetOrigin(null);
+
+        $origin = rtrim((string) config('app.url'), '/');
+
+        $this->withServerVariables([
+            'DOCUMENT_ROOT' => dirname(public_path()),
+        ])->get('/')
+            ->assertOk()
+            ->assertSee($origin.'/public/images/placeholders/scrub.svg', false)
+            ->assertDontSee('src="/images/placeholders/scrub.svg"', false)
+            ->assertDontSee('href="/shop"', false);
+    }
+
     public function test_storefront_pages_render(): void
     {
         foreach ([

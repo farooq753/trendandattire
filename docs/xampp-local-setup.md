@@ -6,7 +6,7 @@ Development and automated tests for this repository run on Linux. Use these step
 2. Start Apache and MySQL from the XAMPP control panel.
 3. Open phpMyAdmin and create two databases: `trendandattire` and `trendandattire_test`.
 4. Create a user, for example `ta_app`, with access only to those two databases. Do not reuse the sample password from `.env.example` on a shared machine.
-5. Copy the project into a folder such as `C:\xampp\htdocs\trendandattire`. Prefer `php artisan serve` over exposing the repository root through Apache. If you use Apache, point the document root at the `public` directory.
+5. Copy the project into a folder such as `C:\xampp\htdocs\trendandattire`. Prefer `php artisan serve` over exposing the repository root through Apache. Opening `http://localhost/trendandattire/public/` is supported: image and stylesheet URLs include that folder. `APP_URL` can stay `http://localhost`.
 6. In a terminal:
 
 ```powershell

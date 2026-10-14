@@ -22,7 +22,7 @@
                 <article class="p-4 bg-white border">
                     <h2 class="h4">{{ $banner->title }}</h2>
                     @if ($banner->subtitle)<p>{{ $banner->subtitle }}</p>@endif
-                    @if ($banner->link_url)<a href="{{ $banner->link_url }}">View</a>@endif
+                    @if ($banner->link_url)<a href="{{ url($banner->link_url) }}">View</a>@endif
                 </article>
             </div>
         @endforeach

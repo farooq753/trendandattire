@@ -7,8 +7,10 @@ use App\Models\Country;
 use App\Models\Currency;
 use App\Services\CartService;
 use App\Services\CurrencyService;
+use App\Support\PublicPath;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +21,8 @@ class SetStorefrontContext
 
     public function handle(Request $request, Closure $next): Response
     {
+        $this->useInstalledPublicDirectory($request);
+
         $user = $request->user();
 
         if (! $request->session()->has('locale')) {
@@ -57,5 +61,34 @@ class SetStorefrontContext
         ]);
 
         return $next($request);
+    }
+
+    private function useInstalledPublicDirectory(Request $request): void
+    {
+        $base = $this->installedPublicBase($request);
+
+        URL::forceRootUrl($base === '' ? null : $request->getSchemeAndHttpHost().$base);
+    }
+
+    /**
+     * Folder between Apache's document root and public/, such as /trendandattire/public.
+     * An empty document root must stay empty: realpath('') is the process working directory.
+     */
+    private function installedPublicBase(Request $request): string
+    {
+        $documentRoot = trim((string) $request->server->get('DOCUMENT_ROOT', ''));
+
+        if ($documentRoot === '') {
+            return '';
+        }
+
+        $resolvedRoot = realpath($documentRoot);
+        $publicPath = realpath(public_path());
+
+        if ($resolvedRoot === false || $publicPath === false) {
+            return '';
+        }
+
+        return PublicPath::baseFromRoots($resolvedRoot, $publicPath);
     }
 }
