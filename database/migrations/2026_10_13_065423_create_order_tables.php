@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('shipping_method_name');
             $table->json('shipping_snapshot')->nullable();
             $table->json('tax_snapshot')->nullable();
-            $table->timestamp('placed_at')->index();
+            $table->timestamp('placed_at')->useCurrent()->index();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
             $table->index(['user_id', 'placed_at']);

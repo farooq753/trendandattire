@@ -35,7 +35,7 @@ return new class extends Migration
             $table->char('quote_code', 3);
             $table->decimal('rate', 18, 8);
             $table->string('source', 32)->default('manual');
-            $table->timestamp('effective_at');
+            $table->timestamp('effective_at')->useCurrent();
             $table->timestamps();
             $table->index(['base_code', 'quote_code', 'effective_at']);
             $table->foreign('base_code')->references('code')->on('currencies');
