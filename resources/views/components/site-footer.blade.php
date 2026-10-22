@@ -3,13 +3,19 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <h2 class="h5">Trend &amp; Attire</h2>
-                <p class="mb-0">Ready-made and custom-stitched scrub suits. {{ __('store.duties') }}</p>
+                <p>Ready-made scrub suits. {{ __('store.duties') }}</p>
+                @php($location = config('store.location'))
+                <address class="small mb-2">
+                    @foreach ($location['lines'] as $line)
+                        {{ $line }}@if (! $loop->last)<br>@endif
+                    @endforeach
+                </address>
+                <p class="small mb-0"><a href="{{ $location['maps_url'] }}" rel="noopener noreferrer" target="_blank">Google Maps</a></p>
             </div>
             <div class="col-md-4">
                 <h2 class="h6">Help</h2>
                 <ul class="list-unstyled">
                     <li><a href="{{ route('size-guide') }}">Size guide</a></li>
-                    <li><a href="{{ route('measurement-guide') }}">Measurement guide</a></li>
                     <li><a href="{{ route('shipping') }}">Shipping</a></li>
                     <li><a href="{{ route('returns.policy') }}">Returns</a></li>
                     <li><a href="{{ route('faq') }}">FAQ</a></li>

@@ -16,7 +16,7 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
-        abort_unless($product->is_published, 404);
+        abort_unless($product->is_published && $product->acceptsReadyMade(), 404);
         $product->load(['images', 'category', 'variants.attributeValues.attribute', 'fabrics', 'customizationOptions.values', 'measurementSchemas']);
         $reviews = ProductReview::query()
             ->where('product_id', $product->id)

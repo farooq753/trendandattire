@@ -5,10 +5,9 @@
     <div class="row align-items-center g-4">
         <div class="col-lg-7">
             <p class="text-uppercase text-secondary mb-2">Medical apparel</p>
-            <h1 class="display-5">Scrub suits, ready to ship or stitched to measure.</h1>
-            <p class="lead">Choose a size and color from stock, or configure a custom garment with your measurements. Prices are calculated on the server before checkout.</p>
-            <a class="btn btn-navy me-2" href="{{ route('shop') }}">Shop scrubs</a>
-            <a class="btn btn-teal" href="{{ route('custom.index') }}">Design custom scrubs</a>
+            <h1 class="display-5">Scrub suits, ready to ship.</h1>
+            <p class="lead">Choose a size and color from stock. Prices are calculated on the server before checkout.</p>
+            <a class="btn btn-navy" href="{{ route('shop') }}">Shop scrubs</a>
         </div>
         <div class="col-lg-5">
             <img class="img-fluid placeholder-art" src="{{ asset('images/placeholders/scrub.svg') }}" alt="Illustration of a scrub suit">

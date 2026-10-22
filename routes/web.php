@@ -25,7 +25,6 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ConfiguratorController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
@@ -53,10 +52,6 @@ Route::get('/sale', [CatalogController::class, 'sale'])->name('sale');
 Route::get('/search', [CatalogController::class, 'search'])->name('search');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/products/{product:slug}/cart', [ProductController::class, 'addToCart'])->name('products.cart');
-
-Route::get('/custom-scrubs', [ConfiguratorController::class, 'index'])->name('custom.index');
-Route::get('/products/{product:slug}/configure', [ConfiguratorController::class, 'show'])->name('custom.configure');
-Route::post('/products/{product:slug}/configure', [ConfiguratorController::class, 'store'])->name('custom.store');
 
 Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
 Route::patch('/cart/items/{item}', [CartController::class, 'update'])->name('cart.update');

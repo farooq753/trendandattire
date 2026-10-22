@@ -9,5 +9,5 @@
     <li>Hip: around the fullest part.</li>
     <li>Inseam and length: from the point described on the garment schema.</li>
 </ul>
-<p>A custom order cannot be added while a required measurement or style option is missing.</p>
+<p>Use these points when comparing a ready-made size. This shop sells ready-made garments from stock.</p>
 @endsection

@@ -7,7 +7,6 @@ use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Exceptions\CheckoutException;
 use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\Currency;
 use App\Models\Order;
@@ -30,7 +29,6 @@ class CheckoutService
         private TaxService $tax,
         private InventoryService $inventory,
         private StoreSettings $settings,
-        private CustomConfigurator $configurator,
         private OrderNotifier $notifier,
     ) {}
 
@@ -83,18 +81,7 @@ class CheckoutService
                     $weight += ((int) ($variant->weight_grams ?: $product->weight_grams ?: 0)) * $item->quantity;
                 }
             } elseif ($item->fulfillment_type === 'custom') {
-                $priced = $this->configurator->price($product, $this->customInput($item));
-
-                if (! $priced['ok']) {
-                    $lineError = 'The custom configuration is no longer valid.';
-                } else {
-                    $unit = $priced['unit_price'];
-                    $lead = $priced['lead_days'];
-                    $configuration = $priced['configuration'];
-                    $measurements = $priced['measurements'];
-                    $personalization = $priced['personalization'];
-                    $weight += ((int) ($product->weight_grams ?: 400)) * $item->quantity;
-                }
+                $lineError = 'Custom stitching is no longer available.';
             } else {
                 $lineError = 'This line has an unknown fulfillment type.';
             }
@@ -442,64 +429,5 @@ class CheckoutService
         }
 
         return true;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    private function customInput(CartItem $item): array
-    {
-        $selections = $item->configuration['selections'] ?? null;
-
-        if (is_array($selections)) {
-            return array_merge($selections, [
-                'personalization_type' => $item->personalization['type'] ?? ($selections['personalization_type'] ?? 'none'),
-                'personalization_text' => $item->personalization['text'] ?? ($selections['personalization_text'] ?? null),
-                'logo_path' => $item->personalization['logo_path'] ?? ($selections['logo_path'] ?? null),
-            ]);
-        }
-
-        $options = [];
-        $fabricId = null;
-
-        foreach ($item->configuration ?? [] as $row) {
-            if (($row['option_key'] ?? null) === 'fabric') {
-                $fabricId = $item->product?->fabrics->firstWhere('name', $row['value'])?->id;
-            } elseif (($row['option_key'] ?? null) === 'size') {
-                $options['standard_size'] = $row['value'];
-            } else {
-                $match = $item->product?->customizationOptions
-                    ->firstWhere('code', $row['option_key'])
-                    ?->values
-                    ->firstWhere('label', $row['value']);
-                if ($match) {
-                    $options[$row['option_key']] = $match->id;
-                }
-            }
-        }
-
-        $measurements = [];
-
-        foreach ($item->measurements ?? [] as $measurement) {
-            $measurements[$measurement['field_key']] = [
-                'value' => $measurement['original_value'],
-                'unit' => $measurement['original_unit'],
-            ];
-        }
-
-        $sizing = isset($options['standard_size']) || collect($item->configuration ?? [])->contains(fn ($row) => ($row['option_key'] ?? null) === 'size')
-            ? 'standard'
-            : 'custom';
-
-        return [
-            'fabric_id' => $fabricId,
-            'options' => $options,
-            'sizing_method' => $measurements === [] ? $sizing : 'custom',
-            'standard_size' => collect($item->configuration ?? [])->firstWhere('option_key', 'size')['value'] ?? null,
-            'measurements' => $measurements,
-            'personalization_type' => $item->personalization['type'] ?? 'none',
-            'personalization_text' => $item->personalization['text'] ?? null,
-            'logo_path' => $item->personalization['logo_path'] ?? null,
-        ];
     }
 }

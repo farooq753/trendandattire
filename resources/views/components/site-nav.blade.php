@@ -13,7 +13,6 @@
             <li class="nav-item"><a class="nav-link" href="{{ route('new-arrivals') }}">New</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('best-sellers') }}">Best sellers</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('sale') }}">Sale</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('custom.index') }}">Custom scrubs</a></li>
         </ul>
     </div>
 </nav>

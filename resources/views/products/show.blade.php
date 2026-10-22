@@ -43,9 +43,6 @@
                 <x-button>Add to cart</x-button>
             </form>
         @endif
-        @if ($product->acceptsCustom())
-            <a class="btn btn-teal mt-3" href="{{ route('custom.configure', $product) }}">Configure custom stitching</a>
-        @endif
         @auth
             <form class="mt-3" method="POST" action="{{ route('wishlist.store', $product) }}">@csrf<button class="btn btn-outline-secondary" type="submit">Save to wishlist</button></form>
         @endauth
@@ -79,7 +76,7 @@
         '@type' => 'Offer',
         'priceCurrency' => $product->currency_code,
         'price' => $product->effectivePrice(),
-        'availability' => $product->acceptsCustom() || $product->variants->contains(fn ($variant) => $variant->availableQuantity() > 0)
+        'availability' => $product->variants->contains(fn ($variant) => $variant->availableQuantity() > 0)
             ? 'https://schema.org/InStock'
             : 'https://schema.org/OutOfStock',
     ],

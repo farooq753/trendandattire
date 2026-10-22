@@ -23,7 +23,6 @@ class SitemapController extends Controller
             route('new-arrivals'),
             route('best-sellers'),
             route('sale'),
-            route('custom.index'),
             route('about'),
             route('contact'),
             route('faq'),
@@ -35,7 +34,7 @@ class SitemapController extends Controller
             route('measurement-guide'),
         ];
 
-        foreach (Product::query()->published()->orderBy('id')->get() as $product) {
+        foreach (Product::query()->published()->whereIn('fulfillment_type', ['ready', 'both'])->orderBy('id')->get() as $product) {
             $urls[] = route('products.show', $product);
         }
 

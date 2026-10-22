@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', $title ?? 'Trend & Attire')</title>
-    <meta name="description" content="@yield('description', $description ?? 'Trend & Attire designs ready-made and custom-stitched scrub suits for international orders.')">
+    <meta name="description" content="@yield('description', $description ?? 'Trend & Attire sells ready-made scrub suits for international orders.')">
     <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
+    @include('components.local-business')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>

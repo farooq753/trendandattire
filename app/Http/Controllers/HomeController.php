@@ -22,7 +22,7 @@ class HomeController extends Controller
                 })
                 ->orderBy('sort_order')
                 ->get(),
-            'featured' => Product::query()->published()->where('is_featured', true)->with('images')->latest('published_at')->limit(8)->get(),
+            'featured' => Product::query()->published()->where('is_featured', true)->whereIn('fulfillment_type', ['ready', 'both'])->with('images')->latest('published_at')->limit(8)->get(),
             'arrivals' => Product::query()->published()->with('images')->latest('published_at')->limit(4)->get(),
         ]);
     }

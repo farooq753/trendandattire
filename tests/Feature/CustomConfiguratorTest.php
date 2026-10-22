@@ -60,10 +60,9 @@ class CustomConfiguratorTest extends TestCase
         $this->assertSame('101.60', $chest['normalized_cm']);
     }
 
-    public function test_configure_page_renders(): void
+    public function test_configure_page_is_not_available(): void
     {
-        $product = Product::query()->where('slug', 'custom-stitched-top')->firstOrFail();
-
-        $this->get(route('custom.configure', $product))->assertOk()->assertSee('Chest');
+        $this->get('/products/custom-stitched-top/configure')->assertNotFound();
+        $this->get('/products/custom-stitched-top')->assertNotFound();
     }
 }

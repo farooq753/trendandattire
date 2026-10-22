@@ -171,10 +171,14 @@ class CatalogSeeder extends Seeder
             ['type' => 'percent', 'value' => '10.0000', 'currency_code' => 'USD', 'is_active' => true, 'per_customer_limit' => 1],
         );
 
+        Banner::query()->where('title', 'Ready-made and made to measure')->update([
+            'title' => 'Ready-made scrub suits',
+        ]);
+
         Banner::query()->updateOrCreate(
-            ['title' => 'Ready-made and made to measure'],
+            ['title' => 'Ready-made scrub suits'],
             [
-                'subtitle' => 'Stocked sizes ship from inventory. Custom garments start after you confirm measurements.',
+                'subtitle' => 'Stocked sizes ship from inventory.',
                 'link_url' => '/shop',
                 'placement' => 'home',
                 'is_active' => true,

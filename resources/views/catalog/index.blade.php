@@ -38,14 +38,6 @@
                         </div>
                     @endforeach
                     <div class="mb-3">
-                        <label class="form-label" for="fulfillment">Ready or custom</label>
-                        <select class="form-select" id="fulfillment" name="fulfillment">
-                            <option value="">Any</option>
-                            <option value="ready" @selected(($filters['fulfillment'] ?? '') === 'ready')>Ready-made</option>
-                            <option value="custom" @selected(($filters['fulfillment'] ?? '') === 'custom')>Custom-stitched</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label class="form-label" for="availability">Availability</label>
                         <select class="form-select" id="availability" name="availability">
                             <option value="">Any</option>

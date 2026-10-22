@@ -15,6 +15,7 @@ class CatalogQuery
     {
         $query = Product::query()
             ->published()
+            ->whereIn('fulfillment_type', ['ready', 'both'])
             ->with(['images', 'category', 'variants.attributeValues.attribute']);
 
         if ($gender = $filters['gender'] ?? null) {
@@ -74,14 +75,6 @@ class CatalogQuery
             });
         }
 
-        if (($filters['fulfillment'] ?? null) === 'ready') {
-            $query->whereIn('fulfillment_type', ['ready', 'both']);
-        }
-
-        if (($filters['fulfillment'] ?? null) === 'custom') {
-            $query->whereIn('fulfillment_type', ['custom', 'both']);
-        }
-
         if (($filters['min_price'] ?? '') !== '') {
             $query->whereRaw('COALESCE(sale_price, regular_price) >= ?', [(string) $filters['min_price']]);
         }
@@ -91,11 +84,8 @@ class CatalogQuery
         }
 
         if (($filters['availability'] ?? null) === 'in_stock') {
-            $query->where(function (Builder $inner) {
-                $inner->where('fulfillment_type', 'custom')
-                    ->orWhereHas('variants', function (Builder $variants) {
-                        $variants->where('is_available', true)->whereColumn('stock_on_hand', '>', 'reserved');
-                    });
+            $query->whereHas('variants', function (Builder $variants) {
+                $variants->where('is_available', true)->whereColumn('stock_on_hand', '>', 'reserved');
             });
         }
 

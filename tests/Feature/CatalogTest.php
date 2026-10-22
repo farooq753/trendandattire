@@ -51,11 +51,28 @@ class CatalogTest extends TestCase
             ->assertDontSee('href="/shop"', false);
     }
 
+    public function test_contact_page_shows_the_nazimabad_shop_on_google_maps(): void
+    {
+        $response = $this->get(route('contact'));
+
+        $response->assertOk()
+            ->assertSee('Suit F-21, Saima Paari Star', false)
+            ->assertSee('North Nazimabad, Karachi 74600', false)
+            ->assertSee('https://maps.app.goo.gl/2YCJHnG91GyaQY999', false)
+            ->assertSee('0x3eb33fcd52fb56d9', false)
+            ->assertSee('24.9414297', false);
+
+        $this->assertStringContainsString(
+            'frame-src https://www.google.com',
+            (string) $response->headers->get('Content-Security-Policy'),
+        );
+    }
+
     public function test_storefront_pages_render(): void
     {
         foreach ([
             'home', 'shop', 'men', 'women', 'unisex', 'tops', 'pants', 'sets', 'jackets',
-            'accessories', 'new-arrivals', 'best-sellers', 'sale', 'custom.index',
+            'accessories', 'new-arrivals', 'best-sellers', 'sale',
             'about', 'contact', 'faq', 'shipping', 'returns.policy', 'privacy', 'terms',
             'size-guide', 'measurement-guide', 'login', 'register', 'password.request',
             'tracking.create', 'cart.show', 'sitemap', 'robots',
@@ -68,7 +85,9 @@ class CatalogTest extends TestCase
     {
         $this->get(route('search', ['q' => 'Core']))->assertOk()->assertSee('Core scrub set');
         $this->get(route('shop', ['gender' => 'women']))->assertOk()->assertSee('Women’s scrub pants')->assertDontSee('Men’s scrub top');
-        $this->get(route('shop', ['fulfillment' => 'custom']))->assertOk()->assertSee('Custom stitched top');
+        $this->get(route('shop'))->assertOk()->assertDontSee('Custom stitched top');
+        $this->get('/custom-scrubs')->assertNotFound();
+        $this->get('/products/custom-stitched-top/configure')->assertNotFound();
 
         $hidden = Product::factory()->create(['is_published' => false, 'name' => 'Hidden draft scrub']);
         $this->get(route('shop'))->assertOk()->assertDontSee($hidden->name);
