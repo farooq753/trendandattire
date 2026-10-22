@@ -5,16 +5,22 @@
             <div class="col-lg-3">
                 <a class="footer-brand" href="{{ route('home') }}">T&amp;A</a>
                 <p>Premium medical apparel designed by doctors. Crafted for comfort. Trusted for quality.</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com/106564844552933" rel="noopener noreferrer" target="_blank" aria-label="Facebook"><x-icon name="facebook" /></a>
+                    <span class="social-mark" aria-label="Instagram"><x-icon name="instagram" /></span>
+                </div>
             </div>
             <div class="col-6 col-lg-2">
                 <h2>Shop</h2>
                 <ul>
                     <li><a href="{{ route('shop') }}">All products</a></li>
-                    <li><a href="{{ route('tops') }}">Scrub tops</a></li>
-                    <li><a href="{{ route('pants') }}">Scrub pants</a></li>
-                    <li><a href="{{ route('sets') }}">Complete sets</a></li>
-                    <li><a href="{{ route('jackets') }}">Jackets</a></li>
-                    <li><a href="{{ route('accessories') }}">Accessories</a></li>
+                    <li><a href="{{ route('products.show', 'signature-scrub-collection') }}">Signature scrubs</a></li>
+                    <li><a href="{{ route('products.show', 'essential-scrub-collection') }}">Essential scrubs</a></li>
+                </ul>
+                <h2 class="footer-subhead">Add-ons</h2>
+                <ul>
+                    <li><a href="{{ route('products.show', 'scrub-cap') }}">Scrub cap</a></li>
+                    <li><a href="{{ route('products.show', 'white-coat') }}">White coat</a></li>
                 </ul>
             </div>
             <div class="col-6 col-lg-2">
@@ -41,10 +47,10 @@
             <div class="col-lg-3">
                 <h2>Customer care</h2>
                 <ul class="footer-contact">
-                    <li><i class="bi bi-telephone" aria-hidden="true"></i> <a href="tel:{{ $location['phone'] }}">{{ $location['phone_display'] }}</a></li>
-                    <li><i class="bi bi-envelope" aria-hidden="true"></i> <a href="{{ route('contact') }}">Contact the shop</a></li>
-                    <li><i class="bi bi-geo-alt" aria-hidden="true"></i> <a href="{{ $location['maps_url'] }}" rel="noopener noreferrer" target="_blank">{{ $location['lines'][2] }}</a></li>
-                    <li><i class="bi bi-clock" aria-hidden="true"></i> {{ $location['hours'] }}</li>
+                    <li><x-icon name="phone" /> <a href="tel:{{ $location['phone'] }}">{{ $location['phone_display'] }}</a></li>
+                    <li><x-icon name="mail" /> <a href="{{ route('contact') }}">Contact the shop</a></li>
+                    <li><x-icon name="pin" /> <a href="{{ $location['maps_url'] }}" rel="noopener noreferrer" target="_blank">{{ $location['lines'][2] }}</a></li>
+                    <li><x-icon name="clock" /> {{ $location['hours'] }}</li>
                 </ul>
                 <h2 class="mt-4">Newsletter</h2>
                 <p>Subscribe to get special offers, new arrivals and updates.</p>

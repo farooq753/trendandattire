@@ -14,7 +14,7 @@ class CatalogController extends Controller
 
     public function index(Request $request): View
     {
-        return $this->render($request, 'Shop', []);
+        return $this->render($request, 'Shop', [], true);
     }
 
     public function gender(Request $request, string $gender): View
@@ -60,7 +60,7 @@ class CatalogController extends Controller
     /**
      * @param  array<string, mixed>  $locked
      */
-    private function render(Request $request, string $title, array $locked): View
+    private function render(Request $request, string $title, array $locked, bool $withAddons = false): View
     {
         $filters = array_merge($request->only([
             'q', 'category', 'size', 'color', 'collar', 'fabric', 'fit', 'fulfillment',
@@ -73,6 +73,9 @@ class CatalogController extends Controller
             'filters' => $filters,
             'attributes' => ProductAttribute::query()->where('is_filterable', true)->with('values')->orderBy('sort_order')->get(),
             'activeValues' => AttributeValue::query()->with('attribute')->get(),
+            'addons' => $withAddons
+                ? $this->catalog->listing(['addons_only' => true])->get()->sortBy(fn ($product) => (float) $product->regular_price)->values()
+                : collect(),
         ]);
     }
 }

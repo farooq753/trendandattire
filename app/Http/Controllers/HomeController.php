@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttributeValue;
 use App\Models\Banner;
 use App\Models\Product;
 use Illuminate\View\View;
@@ -24,6 +25,18 @@ class HomeController extends Controller
                 ->get(),
             'featured' => Product::query()->published()->where('is_featured', true)->whereIn('fulfillment_type', ['ready', 'both'])->with('images')->latest('published_at')->limit(8)->get(),
             'arrivals' => Product::query()->published()->with('images')->latest('published_at')->limit(4)->get(),
+            'scrubColours' => AttributeValue::query()
+                ->whereHas('attribute', fn ($query) => $query->where('slug', 'color'))
+                ->where('slug', '!=', 'white')
+                ->orderBy('sort_order')
+                ->get(),
+            'addons' => Product::query()
+                ->published()
+                ->whereIn('slug', ['scrub-cap', 'white-coat'])
+                ->with('images')
+                ->get()
+                ->sortBy(fn (Product $product) => $product->slug === 'scrub-cap' ? 0 : 1)
+                ->values(),
         ]);
     }
 }

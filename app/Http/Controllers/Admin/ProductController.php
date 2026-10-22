@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
-use App\Models\Category;
 use App\Models\Product;
 use App\Services\AuditLogger;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +17,7 @@ class ProductController extends Controller
     public function index(): View
     {
         return view('admin.products.index', [
-            'products' => Product::query()->with('category')->latest()->paginate(20),
+            'products' => Product::query()->latest()->paginate(20),
         ]);
     }
 
@@ -26,7 +25,6 @@ class ProductController extends Controller
     {
         return view('admin.products.form', [
             'product' => new Product(['currency_code' => 'USD', 'fulfillment_type' => 'ready', 'gender' => 'unisex', 'garment_type' => 'top']),
-            'categories' => Category::query()->orderBy('name')->get(),
         ]);
     }
 
@@ -44,7 +42,6 @@ class ProductController extends Controller
 
         return view('admin.products.form', [
             'product' => $product,
-            'categories' => Category::query()->orderBy('name')->get(),
             'attributeValues' => AttributeValue::query()->with('attribute')->get()->groupBy(fn ($value) => $value->attribute->name),
         ]);
     }
@@ -120,7 +117,6 @@ class ProductController extends Controller
     private function validated(Request $request, ?int $ignore = null): array
     {
         $data = $request->validate([
-            'category_id' => ['nullable', 'exists:categories,id'],
             'name' => ['required', 'string', 'max:180'],
             'sku' => ['required', 'string', 'max:64', Rule::unique('products', 'sku')->ignore($ignore)],
             'slug' => ['nullable', 'string', 'max:180', Rule::unique('products', 'slug')->ignore($ignore)],

@@ -26,14 +26,14 @@ class CatalogTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('https://quicksoftsolution.com/public/images/placeholders/scrub.svg', false)
-            ->assertDontSee('src="/images/placeholders/scrub.svg"', false);
+            ->assertSee('https://quicksoftsolution.com/public/images/products/scrub-set.jpg', false)
+            ->assertDontSee('src="/images/products/scrub-set.jpg"', false);
 
-        $product = Product::query()->where('slug', 'core-scrub-set')->firstOrFail();
+        $product = Product::query()->where('slug', 'signature-scrub-collection')->firstOrFail();
 
         $this->get('/products/'.$product->slug)
             ->assertOk()
-            ->assertSee('https://quicksoftsolution.com/public/images/placeholders/scrub.svg', false);
+            ->assertSee('https://quicksoftsolution.com/public/images/products/scrub-set.jpg', false);
     }
 
     public function test_images_include_the_xampp_project_folder(): void
@@ -46,8 +46,8 @@ class CatalogTest extends TestCase
             'DOCUMENT_ROOT' => dirname(public_path()),
         ])->get('/')
             ->assertOk()
-            ->assertSee($origin.'/public/images/placeholders/scrub.svg', false)
-            ->assertDontSee('src="/images/placeholders/scrub.svg"', false)
+            ->assertSee($origin.'/public/images/products/scrub-set.jpg', false)
+            ->assertDontSee('src="/images/products/scrub-set.jpg"', false)
             ->assertDontSee('href="/shop"', false);
     }
 
@@ -83,9 +83,9 @@ class CatalogTest extends TestCase
 
     public function test_search_and_filters_use_catalog_data(): void
     {
-        $this->get(route('search', ['q' => 'Core']))->assertOk()->assertSee('Core scrub set');
-        $this->get(route('shop', ['gender' => 'women']))->assertOk()->assertSee('Women’s scrub pants')->assertDontSee('Men’s scrub top');
-        $this->get(route('shop'))->assertOk()->assertDontSee('Custom stitched top');
+        $this->get(route('search', ['q' => 'Signature']))->assertOk()->assertSee('Signature Scrub Collection');
+        $this->get(route('shop', ['gender' => 'women']))->assertOk()->assertDontSee('Signature Scrub Collection');
+        $this->get(route('shop'))->assertOk()->assertSee('Essential Scrub Collection')->assertSee('Scrub cap')->assertSee('White coat')->assertDontSee('Custom stitched top');
         $this->get('/custom-scrubs')->assertNotFound();
         $this->get('/products/custom-stitched-top/configure')->assertNotFound();
 
@@ -95,11 +95,12 @@ class CatalogTest extends TestCase
 
     public function test_product_page_lists_available_variation(): void
     {
-        $product = Product::query()->where('slug', 'core-scrub-set')->firstOrFail();
+        $product = Product::query()->where('slug', 'signature-scrub-collection')->firstOrFail();
 
         $this->get(route('products.show', $product))
             ->assertOk()
-            ->assertSee('TA-SET-CORE')
+            ->assertSee('TA-SIG')
+            ->assertSee('#031531', false)
             ->assertSee('application/ld+json', false)
             ->assertDontSee('cost_price');
     }

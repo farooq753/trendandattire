@@ -19,6 +19,7 @@ class GeographySeeder extends Seeder
             ['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€', 'decimal_places' => 2, 'is_default' => false],
             ['code' => 'GBP', 'name' => 'Pound Sterling', 'symbol' => '£', 'decimal_places' => 2, 'is_default' => false],
             ['code' => 'AED', 'name' => 'UAE Dirham', 'symbol' => 'AED ', 'decimal_places' => 2, 'is_default' => false],
+            ['code' => 'PKR', 'name' => 'Pakistani Rupee', 'symbol' => 'Rs. ', 'decimal_places' => 0, 'is_default' => false],
         ] as $currency) {
             Currency::query()->updateOrCreate(['code' => $currency['code']], $currency + ['is_active' => true]);
         }

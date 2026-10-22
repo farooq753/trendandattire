@@ -6,6 +6,7 @@
     <title>@yield('title', $title ?? 'Trend & Attire')</title>
     <meta name="description" content="@yield('description', $description ?? 'Trend & Attire sells ready-made scrub suits for international orders.')">
     <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     @include('components.local-business')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

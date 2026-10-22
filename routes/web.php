@@ -5,7 +5,6 @@ use App\Http\Controllers\Account\DashboardController;
 use App\Http\Controllers\Account\OrderController as AccountOrderController;
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
@@ -126,9 +125,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'staff'])->group(fun
         Route::resource('products', AdminProductController::class)->except(['show']);
         Route::post('products/{product:id}/variants', [AdminProductController::class, 'storeVariant'])->name('products.variants.store');
         Route::post('products/{product:id}/images', [AdminProductController::class, 'storeImage'])->name('products.images.store');
-    });
-    Route::middleware('permission:categories.manage')->group(function () {
-        Route::resource('categories', AdminCategoryController::class)->except(['show']);
     });
     Route::middleware('permission:inventory.manage')->group(function () {
         Route::get('inventory', [InventoryController::class, 'index'])->name('inventory.index');

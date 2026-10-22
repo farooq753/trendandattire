@@ -29,8 +29,16 @@ class SetStorefrontContext
             $request->session()->put('locale', $user->locale ?? config('app.locale', 'en'));
         }
 
-        if (! $request->session()->has('currency_code')) {
-            $request->session()->put('currency_code', $user->currency_code ?? $this->currencies->defaultCode());
+        $currency = $request->session()->get('currency_code');
+
+        if (! is_string($currency) || ! $this->currencies->canCheckoutIn($currency)) {
+            $preferred = $user->currency_code ?? $this->currencies->defaultCode();
+
+            if (! is_string($preferred) || ! $this->currencies->canCheckoutIn($preferred)) {
+                $preferred = $this->currencies->defaultCode();
+            }
+
+            $request->session()->put('currency_code', $preferred);
         }
 
         if (! $request->session()->has('country_code') && $user?->country_code) {

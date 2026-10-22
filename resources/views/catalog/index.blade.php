@@ -63,6 +63,28 @@
             @endforelse
         </div>
         <div class="mt-4">{{ $products->links() }}</div>
+        @if (($addons ?? collect())->isNotEmpty())
+            <section class="shop-addons mt-5" aria-label="Add-ons">
+                <h2 class="section-kicker">Add-ons</h2>
+                <div class="row g-3">
+                    @foreach ($addons as $addon)
+                        <div class="col-6 col-xl-4">
+                            <article class="product-card addon-card h-100">
+                                <a href="{{ route('products.show', $addon) }}">
+                                    <img src="{{ $addon->primaryImagePath() }}" alt="{{ $addon->images->first()->alt ?? $addon->name }}">
+                                </a>
+                                <div class="p-3">
+                                    <p class="addon-kicker">Discounted price</p>
+                                    <h3 class="h5"><a class="text-decoration-none" href="{{ route('products.show', $addon) }}">{{ $addon->name }}</a></h3>
+                                    <p class="mb-1">@include('components.price', ['amount' => $addon->effectivePrice(), 'from' => $addon->currency_code])</p>
+                                    <p class="text-secondary mb-0">{{ $addon->slug === 'scrub-cap' ? 'Standard size' : 'Sizes: S, M, L, XL' }}</p>
+                                </div>
+                            </article>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+        @endif
     </div>
 </div>
 @endsection

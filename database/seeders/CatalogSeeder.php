@@ -6,6 +6,7 @@ use App\Models\AttributeValue;
 use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Coupon;
+use App\Models\Currency;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductImage;
@@ -16,24 +17,28 @@ class CatalogSeeder extends Seeder
 {
     public function run(): void
     {
+        Currency::query()->updateOrCreate(
+            ['code' => 'PKR'],
+            ['name' => 'Pakistani Rupee', 'symbol' => 'Rs. ', 'decimal_places' => 0, 'is_active' => true, 'is_default' => true],
+        );
+        Currency::query()->where('code', '!=', 'PKR')->update(['is_default' => false]);
+
         $groups = [
-            'tops' => ['Tops', 'top'],
-            'pants' => ['Pants', 'pants'],
-            'sets' => ['Sets', 'set'],
-            'jackets' => ['Jackets and lab coats', 'jacket'],
-            'accessories' => ['Accessories', 'accessory'],
+            'sets' => 'Sets',
+            'jackets' => 'Jackets and lab coats',
+            'accessories' => 'Accessories',
         ];
 
         $categories = [];
 
-        foreach ($groups as $slug => [$name]) {
+        foreach ($groups as $slug => $name) {
             $categories[$slug] = Category::query()->updateOrCreate(
                 ['slug' => $slug],
                 [
                     'name' => $name,
                     'nav_group' => $slug,
                     'is_active' => true,
-                    'sort_order' => array_search($slug, array_keys($groups), true),
+                    'sort_order' => count($categories),
                     'meta_title' => $name,
                     'meta_description' => $name.' in the Trend & Attire catalog.',
                 ],
@@ -50,66 +55,143 @@ class CatalogSeeder extends Seeder
         );
 
         $sizes = [];
-        foreach (['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'] as $index => $label) {
+        foreach (['S', 'M', 'L', 'XL', '2XL', 'Standard'] as $index => $label) {
             $sizes[$label] = AttributeValue::query()->updateOrCreate(
                 ['product_attribute_id' => $size->id, 'slug' => strtolower($label)],
                 ['value' => $label, 'sort_order' => $index],
             );
         }
 
+        AttributeValue::query()
+            ->where('product_attribute_id', $size->id)
+            ->whereNotIn('slug', array_map(strtolower(...), array_keys($sizes)))
+            ->delete();
+
+        $palette = [
+            'navy' => ['Navy', '#031531'],
+            'black' => ['Black', '#111111'],
+            'army-green' => ['Army Green', '#254323'],
+            'royal-blue' => ['Royal Blue', '#022C7D'],
+            'sky-blue' => ['Sky Blue', '#3D80BE'],
+            'grey' => ['Grey', '#484848'],
+            'maroon' => ['Maroon', '#68071C'],
+            'teal' => ['Teal', '#168B8B'],
+            'white' => ['White', '#FFFFFF'],
+        ];
+
         $colors = [];
-        foreach (['Navy' => 'navy', 'Teal' => 'teal', 'Sand' => 'sand'] as $label => $slug) {
+        foreach ($palette as $slug => [$label, $hex]) {
             $colors[$slug] = AttributeValue::query()->updateOrCreate(
                 ['product_attribute_id' => $color->id, 'slug' => $slug],
-                ['value' => $label, 'sort_order' => count($colors)],
+                ['value' => $label, 'meta' => ['hex' => $hex], 'sort_order' => count($colors)],
             );
         }
 
-        $set = Product::query()->updateOrCreate(
-            ['sku' => 'TA-SET-CORE'],
-            [
-                'category_id' => $categories['sets']->id,
-                'name' => 'Core scrub set',
-                'slug' => 'core-scrub-set',
-                'short_description' => 'Ready-made set sold by size and color from stock.',
-                'description' => 'Sample development product. Fabric composition is stored only when a merchandiser enters it. This row does not claim a certification, medical grade, or country of origin.',
-                'gender' => 'unisex',
-                'garment_type' => 'set',
-                'fulfillment_type' => 'ready',
-                'regular_price' => '78.0000',
-                'sale_price' => '68.0000',
-                'currency_code' => 'USD',
-                'fit' => 'regular',
-                'care' => 'Follow the care label sewn into the garment.',
-                'weight_grams' => 420,
-                'is_featured' => true,
-                'is_published' => true,
-                'published_at' => now()->subDays(3),
-                'meta_title' => 'Core scrub set',
-                'meta_description' => 'Ready-made unisex scrub set.',
-                'keywords' => 'scrub set unisex',
-                'low_stock_threshold' => 3,
-                'track_inventory' => true,
-            ],
+        AttributeValue::query()
+            ->where('product_attribute_id', $color->id)
+            ->whereNotIn('slug', array_keys($palette))
+            ->delete();
+
+        $scrubImages = [
+            ['path' => 'images/products/scrub-set.jpg', 'alt' => 'Scrub top, pants, and cap'],
+            ['path' => 'images/products/scrub-side.jpg', 'alt' => 'Side view of the scrub suit'],
+            ['path' => 'images/products/scrub-top.jpg', 'alt' => 'Scrub top with a chest pocket'],
+            ['path' => 'images/products/scrub-pants.jpg', 'alt' => 'Scrub pants with a drawstring waist'],
+            ['path' => 'images/products/scrub-neck.jpg', 'alt' => 'V-neck and chest pocket detail'],
+            ['path' => 'images/products/scrub-pocket.jpg', 'alt' => 'Close view of the chest pocket'],
+            ['path' => 'images/products/scrub-hem.jpg', 'alt' => 'Side pocket and hem detail'],
+        ];
+
+        $scrubColors = array_diff_key($colors, ['white' => true]);
+        $scrubSizes = ['S', 'M', 'L', 'XL', '2XL'];
+
+        $signature = $this->product(
+            'TA-SIG',
+            'signature-scrub-collection',
+            'Signature Scrub Collection',
+            $categories['sets']->id,
+            'set',
+            '6500.0000',
+            'Ready to wear. Breathable premium-quality fabric, 90% cotton.',
+            "Ready to wear.\nBreathable premium-quality fabric, 90% cotton.\nWrinkle-free.\nColour fast.\nNo shrinkage.",
+            '90% cotton',
+            true,
         );
+        $this->images($signature, $scrubImages);
+        $this->matrix($signature, 'TA-SIG', $scrubSizes, $scrubColors, $sizes, 480);
 
-        ProductImage::query()->updateOrCreate(
-            ['product_id' => $set->id, 'path' => 'images/placeholders/scrub.svg'],
-            ['alt' => 'Illustration of a scrub set', 'is_primary' => true, 'sort_order' => 1],
+        $essential = $this->product(
+            'TA-ESS',
+            'essential-scrub-collection',
+            'Essential Scrub Collection',
+            $categories['sets']->id,
+            'set',
+            '4500.0000',
+            'Ready to wear. Breathable premium-quality fabric, 70% cotton.',
+            "Ready to wear.\nBreathable premium-quality fabric, 70% cotton.\nWrinkle-free.\nColour fast.\nNo shrinkage.",
+            '70% cotton',
+            true,
         );
+        $this->images($essential, $scrubImages);
+        $this->matrix($essential, 'TA-ESS', $scrubSizes, $scrubColors, $sizes, 420);
 
-        $this->variant($set, 'TA-SET-CORE-M-NAVY', 'size:m|color:navy', 12, $sizes['M'], $colors['navy']);
-        $this->variant($set, 'TA-SET-CORE-L-TEAL', 'size:l|color:teal', 2, $sizes['L'], $colors['teal']);
+        $cap = $this->product(
+            'TA-CAP',
+            'scrub-cap',
+            'Scrub cap',
+            $categories['accessories']->id,
+            'accessory',
+            '650.0000',
+            'Discounted price. Standard size, ready to wear.',
+            "Discounted price, standard size.\nReady to wear.",
+            null,
+            false,
+        );
+        $this->images($cap, [
+            ['path' => 'images/products/scrub-cap.jpg', 'alt' => 'Black scrub cap with ties'],
+        ]);
+        $this->syncVariants($cap, [[
+            'sku' => 'TA-CAP-STD',
+            'key' => 'size:standard',
+            'attributes' => [$sizes['Standard']->id],
+            'weight' => 40,
+        ]]);
 
-        $this->simple('TA-TOP-MEN', 'mens-scrub-top', 'Men’s scrub top', 'men', 'top', $categories['tops']->id, '64.0000', null);
-        $this->simple('TA-PANT-WOMEN', 'womens-scrub-pants', 'Women’s scrub pants', 'women', 'pants', $categories['pants']->id, '42.0000', null);
-        $this->simple('TA-JACKET', 'lab-coat', 'Lab coat', 'unisex', 'jacket', $categories['jackets']->id, '88.0000', null);
-        $this->simple('TA-CAP', 'scrub-cap', 'Scrub cap', 'unisex', 'accessory', $categories['accessories']->id, '16.0000', '12.0000');
+        $coat = $this->product(
+            'TA-COAT',
+            'white-coat',
+            'White coat',
+            $categories['jackets']->id,
+            'jacket',
+            '1850.0000',
+            'Discounted price. Ready to wear in sizes S, M, L, and XL.',
+            "Discounted price.\nReady to wear.\nSizes: S, M, L, XL.",
+            null,
+            false,
+        );
+        $this->images($coat, [
+            ['path' => 'images/products/white-coat.jpg', 'alt' => 'White coat, front view'],
+            ['path' => 'images/products/white-coat-angle.jpg', 'alt' => 'White coat at a slight angle'],
+            ['path' => 'images/products/white-coat-collar.jpg', 'alt' => 'White coat collar and label'],
+            ['path' => 'images/products/white-coat-chest.jpg', 'alt' => 'White coat chest pocket'],
+            ['path' => 'images/products/white-coat-sleeve.jpg', 'alt' => 'White coat sleeve and side pocket'],
+            ['path' => 'images/products/white-coat-pocket.jpg', 'alt' => 'Close view of the white coat pocket'],
+        ]);
+        $coatRows = [];
+        foreach (['S', 'M', 'L', 'XL'] as $label) {
+            $coatRows[] = [
+                'sku' => 'TA-COAT-'.$label,
+                'key' => 'size:'.strtolower($label).'|color:white',
+                'attributes' => [$sizes[$label]->id, $colors['white']->id],
+                'weight' => 500,
+            ];
+        }
+        $this->syncVariants($coat, $coatRows);
 
         $custom = Product::query()->updateOrCreate(
             ['sku' => 'TA-CUSTOM-TOP'],
             [
-                'category_id' => $categories['tops']->id,
+                'category_id' => $categories['sets']->id,
                 'name' => 'Custom stitched top',
                 'slug' => 'custom-stitched-top',
                 'short_description' => 'Made after you choose fabric, style, and size or measurements.',
@@ -121,8 +203,8 @@ class CatalogSeeder extends Seeder
                 'currency_code' => 'USD',
                 'fit' => 'regular',
                 'weight_grams' => 280,
-                'is_featured' => true,
-                'is_published' => true,
+                'is_featured' => false,
+                'is_published' => false,
                 'published_at' => now()->subDay(),
                 'production_lead_days' => 14,
                 'allows_personalization' => true,
@@ -137,11 +219,10 @@ class CatalogSeeder extends Seeder
             ['alt' => 'Illustration of a custom scrub top', 'is_primary' => true, 'sort_order' => 1],
         );
 
-        $fabric = $custom->fabrics()->updateOrCreate(
+        $custom->fabrics()->updateOrCreate(
             ['name' => 'Woven scrub cloth'],
             ['composition' => null, 'price_delta' => '5.0000', 'extra_lead_days' => 2, 'is_active' => true, 'sort_order' => 1],
         );
-        unset($fabric);
 
         $collar = $custom->customizationOptions()->updateOrCreate(
             ['code' => 'collar'],
@@ -166,6 +247,10 @@ class CatalogSeeder extends Seeder
             ['label' => 'Length', 'min_cm' => '50.00', 'max_cm' => '110.00', 'is_required' => true, 'sort_order' => 2],
         );
 
+        Product::query()
+            ->whereNotIn('sku', ['TA-SIG', 'TA-ESS', 'TA-CAP', 'TA-COAT'])
+            ->update(['is_published' => false]);
+
         Coupon::query()->updateOrCreate(
             ['code' => 'WELCOME10'],
             ['type' => 'percent', 'value' => '10.0000', 'currency_code' => 'USD', 'is_active' => true, 'per_customer_limit' => 1],
@@ -178,7 +263,7 @@ class CatalogSeeder extends Seeder
         Banner::query()->updateOrCreate(
             ['title' => 'Ready-made scrub suits'],
             [
-                'subtitle' => 'Stocked sizes ship from inventory.',
+                'subtitle' => 'Signature and Essential collections, ready to wear.',
                 'link_url' => '/shop',
                 'placement' => 'home',
                 'is_active' => true,
@@ -187,59 +272,108 @@ class CatalogSeeder extends Seeder
         );
     }
 
-    private function simple(string $sku, string $slug, string $name, string $gender, string $type, int $categoryId, string $price, ?string $sale): void
-    {
-        $product = Product::query()->updateOrCreate(
+    private function product(
+        string $sku,
+        string $slug,
+        string $name,
+        int $categoryId,
+        string $type,
+        string $price,
+        string $summary,
+        string $description,
+        ?string $fabric,
+        bool $featured,
+    ): Product {
+        return Product::query()->updateOrCreate(
             ['sku' => $sku],
             [
                 'category_id' => $categoryId,
                 'name' => $name,
                 'slug' => $slug,
-                'short_description' => 'Ready-made sample for the '.$type.' catalog.',
-                'gender' => $gender,
+                'short_description' => $summary,
+                'description' => $description,
+                'gender' => 'unisex',
                 'garment_type' => $type,
                 'fulfillment_type' => 'ready',
                 'regular_price' => $price,
-                'sale_price' => $sale,
-                'currency_code' => 'USD',
+                'sale_price' => null,
+                'currency_code' => 'PKR',
+                'fabric_composition' => $fabric,
+                'fit' => 'regular',
+                'care' => $fabric ? 'Wrinkle-free, colour fast, and no shrinkage.' : null,
+                'weight_grams' => $type === 'set' ? 450 : 200,
+                'is_featured' => $featured,
                 'is_published' => true,
-                'published_at' => now()->subDays(2),
+                'published_at' => now()->subDays($featured ? 2 : 1),
+                'meta_title' => $name,
+                'meta_description' => $summary,
+                'keywords' => $name,
+                'low_stock_threshold' => 3,
                 'track_inventory' => true,
-                'weight_grams' => 250,
-            ],
-        );
-
-        ProductImage::query()->updateOrCreate(
-            ['product_id' => $product->id, 'path' => 'images/placeholders/scrub.svg'],
-            ['alt' => $name, 'is_primary' => true, 'sort_order' => 1],
-        );
-
-        ProductVariant::query()->updateOrCreate(
-            ['sku' => $sku.'-OS'],
-            [
-                'product_id' => $product->id,
-                'combination_key' => 'size:m|color:navy',
-                'stock_on_hand' => 10,
-                'reserved' => 0,
-                'is_available' => true,
-                'weight_grams' => 250,
+                'allows_personalization' => false,
             ],
         );
     }
 
-    private function variant(Product $product, string $sku, string $key, int $stock, AttributeValue $size, AttributeValue $color): void
+    /**
+     * @param  array<int, array{path: string, alt: string}>  $images
+     */
+    private function images(Product $product, array $images): void
     {
-        $variant = ProductVariant::query()->updateOrCreate(
-            ['sku' => $sku],
-            [
-                'product_id' => $product->id,
-                'combination_key' => $key,
-                'stock_on_hand' => $stock,
-                'reserved' => 0,
-                'is_available' => true,
-                'weight_grams' => 420,
-            ],
-        );
-        $variant->attributeValues()->sync([$size->id, $color->id]);
+        $paths = array_column($images, 'path');
+        $product->images()->whereNotIn('path', $paths)->delete();
+
+        foreach ($images as $index => $image) {
+            ProductImage::query()->updateOrCreate(
+                ['product_id' => $product->id, 'path' => $image['path']],
+                ['alt' => $image['alt'], 'is_primary' => $index === 0, 'sort_order' => $index + 1],
+            );
+        }
+    }
+
+    /**
+     * @param  array<int, string>  $sizeLabels
+     * @param  array<string, AttributeValue>  $colors
+     * @param  array<string, AttributeValue>  $sizes
+     */
+    private function matrix(Product $product, string $prefix, array $sizeLabels, array $colors, array $sizes, int $weight): void
+    {
+        $rows = [];
+
+        foreach ($sizeLabels as $label) {
+            foreach ($colors as $slug => $color) {
+                $rows[] = [
+                    'sku' => $prefix.'-'.$label.'-'.strtoupper($slug),
+                    'key' => 'size:'.strtolower($label).'|color:'.$slug,
+                    'attributes' => [$sizes[$label]->id, $color->id],
+                    'weight' => $weight,
+                ];
+            }
+        }
+
+        $this->syncVariants($product, $rows);
+    }
+
+    /**
+     * @param  array<int, array{sku: string, key: string, attributes: array<int, int>, weight: int}>  $rows
+     */
+    private function syncVariants(Product $product, array $rows): void
+    {
+        $product->variants()->whereNotIn('sku', array_column($rows, 'sku'))->get()->each->delete();
+
+        foreach ($rows as $row) {
+            $variant = ProductVariant::query()->updateOrCreate(
+                ['sku' => $row['sku']],
+                [
+                    'product_id' => $product->id,
+                    'combination_key' => $row['key'],
+                    'stock_on_hand' => 15,
+                    'reserved' => 0,
+                    'is_available' => true,
+                    'weight_grams' => $row['weight'],
+                ],
+            );
+            $variant->attributeValues()->sync($row['attributes']);
+        }
     }
 }

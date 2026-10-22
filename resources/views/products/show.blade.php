@@ -3,12 +3,18 @@
 @section('description', $product->meta_description ?: $product->short_description)
 @section('content')
 @include('components.breadcrumbs', ['items' => ['Shop' => route('shop'), $product->name => null]])
-<div class="row g-4">
+@php
+    $recolor = $product->garment_type === 'set';
+    $requestedColour = (string) request('color', 'black');
+@endphp
+<div class="row g-4 product-gallery" @if($recolor) data-color-root="{{ asset('images/products/colors') }}" @endif>
     <div class="col-lg-6">
-        <img class="img-fluid placeholder-art" src="{{ $product->primaryImagePath() }}" alt="{{ $product->images->first()->alt ?? $product->name }}">
-        <div class="d-flex gap-2 mt-2">
+        <img id="product-photo" class="img-fluid placeholder-art" @if($recolor) data-recolor data-file="{{ basename($product->images->firstWhere('is_primary', true)->path ?? $product->images->first()->path) }}" data-original="{{ $product->primaryImagePath() }}" @endif src="{{ $product->primaryImagePath() }}" alt="{{ $product->images->first()->alt ?? $product->name }}">
+        <div class="d-flex gap-2 mt-2 flex-wrap">
             @foreach ($product->images as $image)
-                <img src="{{ $image->url() }}" alt="{{ $image->alt }}" width="72" height="90">
+                <button class="thumb-btn" type="button" data-file="{{ basename($image->path) }}" data-original="{{ $image->url() }}">
+                    <img @if($recolor) data-recolor data-file="{{ basename($image->path) }}" data-original="{{ $image->url() }}" @endif src="{{ $image->url() }}" alt="{{ $image->alt }}" width="72" height="90">
+                </button>
             @endforeach
         </div>
     </div>
@@ -16,6 +22,24 @@
         <p class="text-secondary text-uppercase">{{ $product->gender }} · {{ $product->garment_type }}</p>
         <h1>{{ $product->name }}</h1>
         <p class="fs-4">@include('components.price', ['amount' => $product->effectivePrice(), 'from' => $product->currency_code])</p>
+        @php
+            $colours = $product->variants
+                ->flatMap(fn ($variant) => $variant->attributeValues)
+                ->filter(fn ($value) => $value->attribute?->type === 'color')
+                ->unique('id')
+                ->sortBy('sort_order');
+            if ($colours->isNotEmpty() && ! $colours->contains(fn ($colour) => $colour->slug === $requestedColour)) {
+                $requestedColour = $colours->first()->slug;
+            }
+        @endphp
+        @if ($colours->isNotEmpty())
+            <div class="color-swatches" aria-label="Available colours">
+                @foreach ($colours as $colour)
+                    <button class="color-swatch @if($colour->slug === $requestedColour) is-selected @endif" type="button" data-color="{{ $colour->slug }}" style="background: {{ $colour->meta['hex'] ?? '#cccccc' }}" aria-label="{{ $colour->value }}" aria-pressed="{{ $colour->slug === $requestedColour ? 'true' : 'false' }}"></button>
+                @endforeach
+            </div>
+            <p class="text-secondary">{{ $colours->pluck('value')->implode(', ') }}</p>
+        @endif
         @if ($product->short_description)<p>{{ $product->short_description }}</p>@endif
         <dl class="row">
             <dt class="col-4">SKU</dt><dd class="col-8">{{ $product->sku }}</dd>
@@ -33,7 +57,11 @@
                 <label class="form-label" for="variant_id">Size and color</label>
                 <select class="form-select mb-3" id="variant_id" name="variant_id" required>
                     @foreach ($product->variants as $variant)
-                        <option value="{{ $variant->id }}" @disabled(! $variant->is_available || ($product->track_inventory && $variant->availableQuantity() < 1))>
+                        @php
+                            $variantColour = $variant->attributeValues->first(fn ($value) => $value->attribute?->type === 'color')?->slug;
+                            $variantSize = $variant->attributeValues->first(fn ($value) => $value->attribute?->type === 'size')?->slug;
+                        @endphp
+                        <option value="{{ $variant->id }}" data-color="{{ $variantColour }}" data-size="{{ $variantSize }}" @selected($variantColour === $requestedColour && $variantSize === 'm') @disabled(! $variant->is_available || ($product->track_inventory && $variant->availableQuantity() < 1))>
                             {{ $variant->label() }} — {{ $variant->availableQuantity() }} available
                         </option>
                     @endforeach

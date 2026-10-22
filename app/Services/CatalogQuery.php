@@ -22,8 +22,12 @@ class CatalogQuery
             $query->where('gender', $gender);
         }
 
-        if ($garment = $filters['garment_type'] ?? null) {
+        if (! empty($filters['addons_only'])) {
+            $query->whereIn('garment_type', ['accessory', 'jacket']);
+        } elseif ($garment = $filters['garment_type'] ?? null) {
             $query->where('garment_type', $garment);
+        } elseif (trim((string) ($filters['q'] ?? '')) === '') {
+            $query->whereNotIn('garment_type', ['accessory', 'jacket']);
         }
 
         if ($category = $filters['category'] ?? null) {

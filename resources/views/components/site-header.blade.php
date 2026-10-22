@@ -1,5 +1,5 @@
 <div class="announce-bar">
-    <p class="mb-0"><i class="bi bi-truck" aria-hidden="true"></i> Nationwide free delivery on orders above PKR 12,000</p>
+    <p class="mb-0"><x-icon name="truck" /> Nationwide free delivery on orders above PKR 12,000</p>
 </div>
 <header class="site-header">
     <div class="container">
@@ -17,19 +17,7 @@
             <div class="collapse navbar-collapse" id="primary-nav">
                 <ul class="navbar-nav mx-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link @if(request()->routeIs('home')) active @endif" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle @if(request()->routeIs('shop', 'men', 'women', 'unisex', 'tops', 'pants', 'sets', 'jackets', 'accessories', 'new-arrivals', 'best-sellers', 'sale')) active @endif" href="{{ route('shop') }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('shop') }}">All products</a></li>
-                            <li><a class="dropdown-item" href="{{ route('men') }}">Men</a></li>
-                            <li><a class="dropdown-item" href="{{ route('women') }}">Women</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tops') }}">Scrub tops</a></li>
-                            <li><a class="dropdown-item" href="{{ route('pants') }}">Scrub pants</a></li>
-                            <li><a class="dropdown-item" href="{{ route('sets') }}">Complete sets</a></li>
-                            <li><a class="dropdown-item" href="{{ route('jackets') }}">Jackets</a></li>
-                            <li><a class="dropdown-item" href="{{ route('accessories') }}">Accessories</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link @if(request()->routeIs('shop', 'products.show')) active @endif" href="{{ route('shop') }}">Shop</a></li>
                     <li class="nav-item"><a class="nav-link @if(request()->routeIs('about')) active @endif" href="{{ route('about') }}">About us</a></li>
                     <li class="nav-item"><a class="nav-link @if(request()->routeIs('size-guide')) active @endif" href="{{ route('size-guide') }}">Size guide</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Custom orders</a></li>
@@ -39,15 +27,15 @@
             </div>
             <div class="header-tools">
                 <button class="icon-btn" type="button" data-bs-toggle="collapse" data-bs-target="#header-search" aria-expanded="false" aria-controls="header-search" aria-label="Search">
-                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <x-icon name="search" />
                 </button>
                 @auth
-                    <a class="icon-btn" href="{{ route('account.dashboard') }}" aria-label="Account"><i class="bi bi-person" aria-hidden="true"></i></a>
+                    <a class="icon-btn" href="{{ route('account.dashboard') }}" aria-label="Account"><x-icon name="person" /></a>
                 @else
-                    <a class="icon-btn" href="{{ route('login') }}" aria-label="Log in"><i class="bi bi-person" aria-hidden="true"></i></a>
+                    <a class="icon-btn" href="{{ route('login') }}" aria-label="Log in"><x-icon name="person" /></a>
                 @endauth
                 <a class="icon-btn cart-btn" href="{{ route('cart.show') }}" aria-label="Cart, {{ $cartCount ?? 0 }} items">
-                    <i class="bi bi-cart3" aria-hidden="true"></i>
+                    <x-icon name="cart" />
                     <span class="cart-count">{{ $cartCount ?? 0 }}</span>
                 </a>
             </div>

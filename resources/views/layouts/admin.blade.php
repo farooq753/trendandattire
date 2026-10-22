@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin') · Trend & Attire</title>
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -15,7 +16,6 @@
             @php $user = auth()->user(); @endphp
             @if ($user->hasPermission('dashboard.view'))<a href="{{ route('admin.dashboard') }}">Dashboard</a>@endif
             @if ($user->hasPermission('products.manage'))<a href="{{ route('admin.products.index') }}">Products</a>@endif
-            @if ($user->hasPermission('categories.manage'))<a href="{{ route('admin.categories.index') }}">Categories</a>@endif
             @if ($user->hasPermission('inventory.manage'))<a href="{{ route('admin.inventory.index') }}">Inventory</a>@endif
             @if ($user->hasPermission('orders.view'))<a href="{{ route('admin.orders.index') }}">Orders</a>@endif
             @if ($user->hasPermission('production.manage'))<a href="{{ route('admin.production.index') }}">Production</a>@endif
