@@ -9,15 +9,21 @@
     @include('components.local-business')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body @class(['page-home' => request()->routeIs('home')])>
     <a class="skip-link" href="#main">Skip to content</a>
     @include('components.site-header')
-    <main id="main" class="py-4">
-        <div class="container">
+    <main id="main" @class(['py-4' => ! request()->routeIs('home')])>
+        @if (request()->routeIs('home'))
             @include('components.alert')
             {{ $slot ?? '' }}
             @yield('content')
-        </div>
+        @else
+            <div class="container">
+                @include('components.alert')
+                {{ $slot ?? '' }}
+                @yield('content')
+            </div>
+        @endif
     </main>
     @include('components.site-footer')
 </body>

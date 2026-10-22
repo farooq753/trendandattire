@@ -53,7 +53,10 @@ textarea:focus-visible,
 
 .site-header {
     background: white;
-    border-bottom: 1px solid var(--ta-line);
+    border-bottom: 1px solid #ece7df;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
 }
 
 .brand-mark {
@@ -155,4 +158,455 @@ textarea:focus-visible,
     height: 320px;
     border: 1px solid var(--ta-line);
     border-radius: 0.4rem;
+}
+
+.announce-bar {
+    background: #07111f;
+    color: #f4f7fb;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.45rem 1rem;
+}
+
+.announce-bar i {
+    margin-right: 0.4rem;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ta-navy);
+    text-decoration: none;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 1.7rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+.brand-hanger {
+    width: 2.1rem;
+    height: 1.4rem;
+}
+
+.site-header .navbar-nav .nav-link {
+    color: #1c2430;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.75rem 0.7rem;
+}
+
+.site-header .navbar-nav .nav-link.active {
+    box-shadow: inset 0 -2px 0 var(--ta-navy);
+}
+
+.site-header .dropdown-menu {
+    border-color: var(--ta-line);
+    min-width: 12rem;
+}
+
+.site-header .dropdown-item {
+    font-size: 0.92rem;
+}
+
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    margin-left: 0.5rem;
+}
+
+.icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 0;
+    background: transparent;
+    color: var(--ta-navy);
+    font-size: 1.15rem;
+    text-decoration: none;
+}
+
+.cart-count {
+    position: absolute;
+    top: 0.05rem;
+    right: 0.05rem;
+    min-width: 1rem;
+    height: 1rem;
+    border-radius: 999px;
+    background: var(--ta-navy);
+    color: white;
+    font-size: 0.65rem;
+    line-height: 1rem;
+    text-align: center;
+}
+
+.header-search {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 32rem;
+    margin-left: auto;
+}
+
+.page-home {
+    background: white;
+}
+
+.page-home .alert {
+    width: min(1140px, calc(100% - 2rem));
+    margin: 1rem auto 0;
+}
+
+.home-hero {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.92fr) 1.15fr;
+    min-height: 560px;
+    background: #071833;
+    color: white;
+}
+
+.home-hero-copy {
+    padding: 4.5rem 8vw 4rem 7vw;
+}
+
+.hero-mark {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(4.5rem, 7vw, 6.4rem);
+    line-height: 0.85;
+    margin: 0;
+}
+
+.hero-brand {
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    margin: 0.8rem 0 1.6rem;
+}
+
+.hero-brand::before,
+.hero-brand::after {
+    content: "";
+    display: inline-block;
+    width: 2.2rem;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.7);
+    vertical-align: middle;
+    margin: 0 0.7rem;
+}
+
+.home-hero h1 {
+    color: white;
+    font-size: clamp(2rem, 3vw, 2.7rem);
+    line-height: 1.15;
+    margin-bottom: 1.2rem;
+}
+
+.hero-points {
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 1.8rem;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.hero-btn {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.7rem 1.2rem;
+    border-radius: 2px;
+}
+
+.home-hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.home-trust,
+.home-collections,
+.home-reasons,
+.home-reviews {
+    padding: 3.2rem 0;
+}
+
+#collections,
+#reviews {
+    scroll-margin-top: 5.5rem;
+}
+
+.trust-grid,
+.reason-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.trust-grid i,
+.reason-grid i {
+    display: block;
+    font-size: 1.6rem;
+    color: var(--ta-navy);
+    margin-bottom: 0.55rem;
+}
+
+.trust-grid strong,
+.reason-grid strong,
+.review-card h3 {
+    display: block;
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ta-navy);
+}
+
+.trust-grid span {
+    display: block;
+    color: #667085;
+    font-size: 0.82rem;
+    margin-top: 0.25rem;
+}
+
+.section-kicker {
+    text-align: center;
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+}
+
+.section-kicker::before,
+.section-kicker::after {
+    content: "";
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: #c5bfb4;
+    vertical-align: middle;
+    margin: 0 0.8rem;
+}
+
+.collection-card {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    min-height: 280px;
+    color: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.collection-card > div {
+    padding: 2rem 1.6rem;
+}
+
+.collection-card h3 {
+    color: white;
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 1.35rem;
+}
+
+.collection-signature {
+    background: #10233f;
+}
+
+.collection-essential {
+    background: #0f4c4a;
+}
+
+.collection-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+.reason-grid {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.review-card {
+    text-align: center;
+    padding: 0.5rem 1rem 1rem;
+}
+
+.review-card img {
+    width: 4.6rem;
+    height: 4.6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+.review-card .stars {
+    color: #c6a15b;
+    letter-spacing: 0.15em;
+    margin: 0.7rem 0 0.35rem;
+}
+
+.review-role {
+    color: #667085;
+    font-size: 0.9rem;
+}
+
+.review-card blockquote {
+    font-size: 0.95rem;
+    margin: 0.8rem 0 0;
+}
+
+.site-footer {
+    background: #071833;
+    color: #d5deea;
+    border-top: 0;
+    margin-top: 0;
+    padding: 3.2rem 0 1.4rem;
+}
+
+.site-footer h2,
+.footer-brand {
+    color: white;
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.footer-brand {
+    display: inline-block;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    text-transform: none;
+    text-decoration: none;
+    margin-bottom: 0.8rem;
+}
+
+.site-footer a {
+    color: #d5deea;
+    text-decoration: none;
+}
+
+.site-footer a:hover,
+.site-footer a:focus {
+    color: white;
+}
+
+.site-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.site-footer li + li {
+    margin-top: 0.4rem;
+}
+
+.footer-contact i {
+    width: 1.1rem;
+}
+
+.newsletter {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.newsletter .form-control {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.35);
+    color: white;
+}
+
+.newsletter .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-base {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-prefs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.footer-prefs .form-select {
+    width: auto;
+    background-color: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.pay-marks {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0;
+}
+
+.pay-marks li {
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 3px;
+    padding: 0.15rem 0.45rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 991.98px) {
+    .home-hero,
+    .collection-card,
+    .trust-grid,
+    .reason-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .home-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .home-hero-photo {
+        min-height: 320px;
+    }
+
+    .home-hero-copy {
+        padding: 2.5rem 1.25rem;
+    }
+
+    .header-tools {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .trust-grid,
+    .reason-grid,
+    .collection-card {
+        grid-template-columns: 1fr;
+    }
 }
